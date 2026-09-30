@@ -1,0 +1,14 @@
+Options -Indexes
+
+# Limite de upload do PHP (o limite dos anexos, 5 MB, é validado na aplicação).
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 12M
+</IfModule>
+
+RewriteEngine On
+
+# Tudo é servido a partir de public/. As pastas src/, views/, config/, database/ e storage/
+# ficam fora do alcance do navegador.
+RewriteCond %{REQUEST_URI} !/public/
+RewriteRule ^(.*)$ public/$1 [L]

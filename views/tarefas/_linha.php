@@ -1,4 +1,5 @@
-<tr data-id="<?= (int) $tarefa['id'] ?>" data-descricao="<?= e($tarefa['descricao']) ?>" data-situacao="<?= e($tarefa['situacao']) ?>">
+<tr data-id="<?= (int) $tarefa['id'] ?>" data-descricao="<?= e($tarefa['descricao']) ?>" data-situacao="<?= e($tarefa['situacao']) ?>"
+    data-usuario="<?= (int) $tarefa['usuario'] ?>" data-responsavel="<?= e($tarefa['responsavel']) ?>" data-data="<?= e(date('Y-m-d', strtotime($tarefa['data_inclusao']))) ?>">
     <td><?= (int) $tarefa['id'] ?></td>
     <td class="tarefa-descricao"><?= e($tarefa['descricao']) ?></td>
     <td><span class="situacao situacao--<?= e($tarefa['situacao']) ?>"><?= e(situacao_rotulo($tarefa['situacao'])) ?></span></td>

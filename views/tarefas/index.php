@@ -1,6 +1,41 @@
 <?php $colunas = $verTodas ? 7 : 6; ?>
 <div id="mensagem-lista" class="alert d-none mensagem-pagina" role="alert"></div>
 
+<form id="form-filtro" class="card-app card-app--largo filtro-tarefas" role="search">
+    <div class="filtro-tarefas__campo filtro-tarefas__campo--busca">
+        <label for="filtro-texto" class="form-label">Buscar</label>
+        <input type="search" class="form-control" id="filtro-texto" name="texto" placeholder="Digite para buscar…">
+    </div>
+    <div class="filtro-tarefas__campo">
+        <label for="filtro-situacao" class="form-label">Situação</label>
+        <select class="form-select" id="filtro-situacao" name="situacao">
+            <option value="">Todas</option>
+            <?php foreach (SITUACOES as $valor => $rotulo): ?>
+                <option value="<?= e($valor) ?>"><?= e($rotulo) ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <?php if ($verTodas): ?>
+        <div class="filtro-tarefas__campo">
+            <label for="filtro-usuario" class="form-label">Usuário</label>
+            <select class="form-select" id="filtro-usuario" name="usuario">
+                <option value="">Todos</option>
+                <?php foreach ($usuarios as $item): ?>
+                    <option value="<?= (int) $item['id'] ?>"><?= e($item['nome']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    <?php endif; ?>
+    <div class="filtro-tarefas__campo">
+        <label for="filtro-data" class="form-label">Data</label>
+        <input type="date" class="form-control" id="filtro-data" name="data">
+    </div>
+    <div class="filtro-tarefas__botoes">
+        <button type="submit" class="btn-app"><i class="bi bi-search" aria-hidden="true"></i> Pesquisar</button>
+        <button type="reset" class="btn-app btn-app--secundario"><i class="bi bi-x-lg" aria-hidden="true"></i> Limpar</button>
+    </div>
+</form>
+
 <div class="card-app card-app--largo">
     <div class="table-responsive">
         <table class="table table-hover align-middle">
@@ -20,6 +55,9 @@
             <tbody id="lista-tarefas">
                 <tr data-vazio <?= empty($tarefas) ? '' : 'hidden' ?>>
                     <td colspan="<?= $colunas ?>" class="text-secondary">Nenhuma tarefa cadastrada.</td>
+                </tr>
+                <tr data-sem-resultado hidden>
+                    <td colspan="<?= $colunas ?>" class="text-secondary">Nenhuma tarefa encontrada com os filtros informados.</td>
                 </tr>
                 <?php foreach ($tarefas as $tarefa): ?>
                     <?php require __DIR__ . '/_linha.php'; ?>

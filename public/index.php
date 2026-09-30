@@ -8,5 +8,6 @@ view('tarefas/index', [
     'titulo' => $verTodas ? 'Todas as tarefas' : 'Minhas tarefas',
     'tarefas' => $verTodas ? tarefas_listar_todas() : tarefas_listar_por_usuario($usuario['id']),
     'verTodas' => $verTodas,
+    'usuarios' => $verTodas ? usuarios_listar() : [],
     'scripts' => ['tarefas.js'],
 ]);

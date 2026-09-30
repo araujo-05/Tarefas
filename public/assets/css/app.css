@@ -98,6 +98,13 @@ body.page-app {
 .card-app .table tfoot td { padding: 1.25rem; border-top: 1px solid var(--cor-borda); background: var(--cor-rodape); }
 .card-app .table tr[data-situacao="concluida"] .tarefa-descricao { color: var(--cor-texto-suave); text-decoration: line-through; }
 
+/* Filtro de tarefas */
+.filtro-tarefas { margin-bottom: 1rem; padding: 1rem 1.25rem; display: flex; align-items: flex-end; gap: .75rem; }
+.filtro-tarefas__campo { flex: 1 1 0; min-width: 0; }
+.filtro-tarefas__campo--busca { flex-grow: 2; }
+.filtro-tarefas__botoes { display: flex; gap: .5rem; white-space: nowrap; }
+.filtro-tarefas .form-label { margin-bottom: .35rem; font-size: .85rem; }
+
 /* Situação */
 .situacao { display: inline-block; padding: .3rem .65rem; border-radius: 999px; font-size: .78rem; font-weight: 700; white-space: nowrap; }
 .situacao--pendente { background: #fef3c7; color: #92400e; }
@@ -160,4 +167,11 @@ a.btn-app:hover { color: #fff; }
     .app-header { flex-direction: column; align-items: stretch; }
     .app-header nav, .app-header .user { justify-content: center; }
     .form-linha { align-items: stretch; flex-direction: column; }
+}
+
+/* Em telas menores os campos do filtro quebram linha para não ficarem espremidos */
+@media (max-width: 991.98px) {
+    .filtro-tarefas { flex-wrap: wrap; }
+    .filtro-tarefas__campo { flex-basis: 160px; }
+    .filtro-tarefas__botoes { flex: 1 1 100%; justify-content: flex-end; }
 }

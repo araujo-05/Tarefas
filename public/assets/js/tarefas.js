@@ -1,5 +1,7 @@
 const listaTarefas = document.getElementById('lista-tarefas');
 const linhaVazia = listaTarefas.querySelector('[data-vazio]');
+const linhaSemResultado = listaTarefas.querySelector('[data-sem-resultado]');
+const formFiltro = document.getElementById('form-filtro');
 const mensagemLista = document.getElementById('mensagem-lista');
 const dialogEditar = document.getElementById('dialog-editar');
 const formEditar = document.getElementById('form-editar');
@@ -10,11 +12,60 @@ const mensagemAnexos = dialogAnexos.querySelector('[data-mensagem-anexos]');
 
 function atualizarLinhaVazia() {
     linhaVazia.hidden = listaTarefas.querySelector('tr[data-id]') !== null;
+    aplicarFiltro();
 }
 
 function linhaDaTarefa(id) {
     return listaTarefas.querySelector(`tr[data-id="${id}"]`);
 }
+
+// ---------- Filtro ----------
+
+/** Minúsculas e sem acentos, para a busca ignorar maiúsculas e acentuação. */
+function normalizar(texto) {
+    return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+// Filtro em uso: só muda ao clicar em Pesquisar (ou Limpar), não a cada digitação.
+let filtro = {};
+
+function lerFiltro() {
+    const campo = (nome) => formFiltro.elements.namedItem(nome)?.value ?? '';
+    filtro = {
+        texto: normalizar(campo('texto').trim()),
+        situacao: campo('situacao'),
+        usuario: campo('usuario'),
+        data: campo('data'),
+    };
+}
+
+function aplicarFiltro() {
+    const { texto, situacao, usuario, data } = filtro;
+
+    let visiveis = 0;
+    listaTarefas.querySelectorAll('tr[data-id]').forEach((linha) => {
+        const { id, descricao, responsavel } = linha.dataset;
+        const visivel = (!texto || normalizar(`${id} ${descricao} ${responsavel}`).includes(texto))
+            && (!situacao || linha.dataset.situacao === situacao)
+            && (!usuario || linha.dataset.usuario === usuario)
+            && (!data || linha.dataset.data === data);
+        linha.hidden = !visivel;
+        visiveis += visivel ? 1 : 0;
+    });
+
+    linhaSemResultado.hidden = visiveis > 0 || !linhaVazia.hidden;
+}
+
+formFiltro.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+    lerFiltro();
+    aplicarFiltro();
+});
+// O reset limpa os campos só depois do evento, por isso o filtro roda no próximo ciclo.
+formFiltro.addEventListener('reset', () => setTimeout(() => {
+    lerFiltro();
+    aplicarFiltro();
+}));
 
 // ---------- Adicionar ----------
 
@@ -42,6 +93,7 @@ configurarFormulario(formEditar, {
     url: 'api/tarefas_editar.php',
     aoSucesso: (dados) => {
         linhaDaTarefa(dados.id)?.replaceWith(criarLinha(dados.html));
+        aplicarFiltro();
         dialogEditar.close();
         mostrarMensagem(mensagemLista, dados.msg, 'success');
     },

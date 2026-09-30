@@ -25,7 +25,7 @@ function usuarios_listar(): array
         FROM users u
         LEFT JOIN tasks t ON t.usuario = u.id
         GROUP BY u.id, u.nome, u.email, u.perfil
-        ORDER BY u.nome')->fetchAll();
+        ORDER BY u.id')->fetchAll();
 }
 
 /** Mesmo formato de usuarios_listar(), para um único usuário. */
